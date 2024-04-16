@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Figuras Geométricas</title>
+    <!-- Agrega la referencia a Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Calculadora de Figuras Geométricas</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="tipoFigura">Selecciona el tipo de figura:</label>
+                <select id="tipoFigura" class="form-control mb-3">
+                    <option value="CUADRADO">Cuadrado</option>
+                    <option value="CIRCULO">Círculo</option>
+                    <option value="TRIANGULO">Triángulo Equilátero</option>
+                    <option value="RECTANGULO">Rectángulo</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="valor">Ingresa el valor necesario:</label>
+                <input type="number" id="valor" step="any" class="form-control mb-3">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button onclick="calcularArea()" class="btn btn-primary">Calcular Área</button>
+            </div>
+            <div class="col-md-6">
+                <button onclick="calcularPerimetro()" class="btn btn-primary">Calcular Perímetro</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <div id="resultado" class="alert alert-info" role="alert"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agrega la referencia a Bootstrap JS (opcional si no lo estás utilizando) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function calcularArea() {
+            const tipoFigura = document.getElementById('tipoFigura').value;
+            const valor = parseFloat(document.getElementById('valor').value);
+
+            console.log('Tipo de figura:', tipoFigura);
+            console.log('Valor:', valor);
+
+            fetch('/figura/area', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tipo: tipoFigura, lado: valor })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                document.getElementById('resultado').innerHTML = `<div class="alert alert-success" role="alert">Área calculada: ${data.data.area}</div>`;
+            })
+            .catch(error => {
+                console.error('Error al calcular el área:', error);
+                document.getElementById('resultado').innerHTML = `<div class="alert alert-danger" role="alert">Error al calcular el área</div>`;
+            });
+        }
+
+        function calcularPerimetro() {
+            const tipoFigura = document.getElementById('tipoFigura').value;
+            const valor = parseFloat(document.getElementById('valor').value);
+
+            console.log('Tipo de figura:', tipoFigura);
+            console.log('Valor:', valor);
+
+            fetch('/figura/perimetro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tipo: tipoFigura, lado: valor })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                document.getElementById('resultado').innerHTML = `<div class="alert alert-success" role="alert">Perímetro calculado: ${data.data.perimetro}</div>`;
+            })
+            .catch(error => {
+                console.error('Error al calcular el perímetro:', error);
+                document.getElementById('resultado').innerHTML = `<div class="alert alert-danger" role="alert">Error al calcular el perímetro</div>`;
+            });
+        }
+    </script>
+</body>
+</html>
